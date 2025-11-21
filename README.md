@@ -50,7 +50,8 @@ Returns a curated set of qualified clinical trials that match the patient's prof
 - **Claude AI**: Intelligent agent orchestration
 - **Clinical Trials MCP**: Clinical trial database access
 - **Subagent Architecture**: Specialized qualification logic
-- **Flask**: Python web framework for the frontend
+- **FastAPI**: Modern, high-performance Python web framework
+- **Uvicorn**: ASGI server for FastAPI
 - **HTML/CSS/JavaScript**: User interface
 
 ## Getting Started
@@ -75,17 +76,31 @@ pip install -r requirements.txt
 
 ### Running the Application
 
-1. Start the Flask server:
+**Option 1: Using the startup script (recommended)**
 ```bash
+./run.sh
+```
+
+**Option 2: Using uvicorn directly**
+```bash
+source venv/bin/activate
+uvicorn app:app --host 0.0.0.0 --port 5000 --reload
+```
+
+**Option 3: Using Python directly**
+```bash
+source venv/bin/activate
 python app.py
 ```
 
-2. Open your browser and navigate to:
-```
-http://localhost:5000
-```
+Once running:
+1. Open your browser and navigate to: `http://localhost:5000`
+2. Enter medical information in the text box
+3. Click "De-identify Information" to see PHI automatically redacted
 
-3. Enter medical information in the text box and click "De-identify Information" to see PHI automatically redacted.
+**Bonus**: FastAPI provides interactive API documentation at:
+- Swagger UI: `http://localhost:5000/docs`
+- ReDoc: `http://localhost:5000/redoc`
 
 ### Example Usage
 

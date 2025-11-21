@@ -1,7 +1,11 @@
-from flask import Flask, request, jsonify, render_template
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 import requests
+from pathlib import Path
 
-app = Flask(__name__)
+app = FastAPI(title="Clinical Trial Qualifier - PHI De-identifier")
 
 # Skyflow API configuration
 SKYFLOW_URL = "https://a370a9658141.vault.skyflowapis-preview.com/v1/detect/deidentify/string"
@@ -9,21 +13,36 @@ SKYFLOW_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2MiOiJ1ODE3NDBkMzIxNW
 VAULT_ID = "fe079a24274f448fa5fd4c471a07d08a"
 
 
-@app.route('/')
-def index():
+# Pydantic models for request/response
+class DeidentifyRequest(BaseModel):
+    text: str
+
+
+class DeidentifyResponse(BaseModel):
+    text: str
+
+
+class ErrorResponse(BaseModel):
+    error: str
+    details: str = None
+
+
+@app.get("/", response_class=HTMLResponse)
+async def index():
     """Serve the main page"""
-    return render_template('index.html')
+    template_path = Path(__file__).parent / "templates" / "index.html"
+    with open(template_path, "r") as f:
+        return HTMLResponse(content=f.read())
 
 
-@app.route('/deidentify', methods=['POST'])
-def deidentify():
+@app.post("/deidentify", response_model=DeidentifyResponse)
+async def deidentify(request: DeidentifyRequest):
     """De-identify medical information using Skyflow"""
     try:
-        data = request.get_json()
-        medical_text = data.get('text', '')
+        medical_text = request.text
         
         if not medical_text:
-            return jsonify({'error': 'No text provided'}), 400
+            raise HTTPException(status_code=400, detail="No text provided")
         
         # Call Skyflow API
         response = requests.post(
@@ -53,17 +72,20 @@ def deidentify():
             skyflow_response = response.json()
             # Extract only the de-identified text from the response
             deidentified_text = skyflow_response.get('text', '')
-            return jsonify({'text': deidentified_text})
+            return DeidentifyResponse(text=deidentified_text)
         else:
-            return jsonify({
-                'error': f'Skyflow API error: {response.status_code}',
-                'details': response.text
-            }), response.status_code
+            raise HTTPException(
+                status_code=response.status_code,
+                detail=f"Skyflow API error: {response.text}"
+            )
             
+    except HTTPException:
+        raise
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5000, log_level="info")
 
