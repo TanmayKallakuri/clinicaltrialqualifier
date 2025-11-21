@@ -1,0 +1,48 @@
+// test_skyflow_data.json
+
+{
+  "condition": "leukemia",
+  "studies": [
+    {
+      "nct_id": "NCT12345",
+      "title": "B-cell Acute Lymphoblastic Leukemia Treatment Study",
+      "status": "RECRUITING",
+      "phase": ["PHASE3"],
+      "conditions": ["B-cell Acute Lymphoblastic Leukemia", "Relapsed Refractory Leukemia"],
+      "lead_sponsor": "[NAME_VGMgLRv]",
+      "investigators": ["[NAME_Jgf3GNQ]", "[NAME_BuVLer5]"],
+      "sites": ["[LOCATION_ADDRESS_STREET_S5USJli], Columbus, OH 43221"],
+      "patient_demographics": {
+        "age": 46,
+        "sex": "Male",
+        "race": "White"
+      },
+      "medical_history": {
+        "diagnosis": "B-ALL relapsed refractory",
+        "initial_diagnosis": "2022",
+        "relapse_date": "2024",
+        "current_blasts": "58 percent CD19+, CD22+",
+        "cytogenetics": "t(12;21)(p13;q22), IKZF1 deletion",
+        "mutations": "NRAS G12D, TP53 R248Q (5% VAF)"
+      },
+      "treatment_history": [
+        "hyper-CVAD induction (2022)",
+        "blinatumomab consolidation (2 cycles)",
+        "inotuzumab ozogamicin (partial response)"
+      ],
+      "current_symptoms": [
+        "progressive fatigue",
+        "night sweats", 
+        "lymphadenopathy",
+        "cytopenias"
+      ],
+      "lab_results": {
+        "hemoglobin": "7.4 g/dL",
+        "wbc": "2.8 K/uL",
+        "platelets": "61 K/uL",
+        "creatinine": "0.9 mg/dL"
+      },
+      "summary": "46-year-old male with relapsed refractory B-cell ALL. Previously treated with hyper-CVAD, blinatumomab, and inotuzumab. Current presentation with progressive fatigue, night sweats, and cytopenias. Bone marrow shows 58% blasts with high-risk cytogenetics."
+    }
+  ]
+}
