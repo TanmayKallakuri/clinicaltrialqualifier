@@ -1,0 +1,39 @@
+# test_memurai.py
+
+import redis
+
+try:
+    # Connect to Memurai (same as Redis)
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    
+    # Test connection
+    response = r.ping()
+    print(f"✓ Memurai connection successful: {response}")
+    
+    # Test basic operations
+    r.set('test_key', 'Hello from Memurai!')
+    value = r.get('test_key')
+    print(f"✓ SET/GET working: {value}")
+    
+    # Test JSON storage
+    import json
+    test_data = {'nct_id': 'NCT123', 'status': 'RECRUITING'}
+    r.set('study:test', json.dumps(test_data))
+    retrieved = json.loads(r.get('study:test'))
+    print(f"✓ JSON storage working: {retrieved}")
+    
+    print("\n" + "="*50)
+    print("MEMURAI IS READY!")
+    print("="*50)
+    
+except redis.exceptions.ConnectionError as e:
+    print(f"✗ Connection failed: {e}")
+    print("\nTroubleshooting:")
+    print("1. Check if Memurai service is running:")
+    print("   - Open Services (services.msc)")
+    print("   - Find 'Memurai' and ensure it's Started")
+    print("2. Try starting manually:")
+    print("   - Run: net start Memurai")
+    
+except Exception as e:
+    print(f"✗ Error: {e}")
